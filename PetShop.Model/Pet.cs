@@ -10,7 +10,9 @@ namespace PetShop.Model
     {
         public string Breed { get; set; }        
         public PetStatus PetStatus { get; set; }
-        
+
+        //Relations
+        public Transaction Transaction { get; set; }
         public Pet()
         {
 

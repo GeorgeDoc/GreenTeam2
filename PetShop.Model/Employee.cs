@@ -13,6 +13,9 @@ namespace PetShop.Model
         public EmployeeType EmployeeType { get; set; }
         public decimal SallaryPerMonth { get; set; }
 
+        //Relations
+        public List<Transaction> Transactions { get; set; }
+
         public Employee()
         {
 
