@@ -12,7 +12,7 @@ using PetShop.EF.Context;
 namespace PetShop.EF.Migrations
 {
     [DbContext(typeof(PetShopContext))]
-    [Migration("20220331130331_Initial")]
+    [Migration("20220401145224_Initial")]
     partial class Initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -37,9 +37,10 @@ namespace PetShop.EF.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
-                    b.Property<int>("Phone")
-                        .HasPrecision(10)
-                        .HasColumnType("int");
+                    b.Property<string>("Phone")
+                        .IsRequired()
+                        .HasMaxLength(10)
+                        .HasColumnType("nvarchar(10)");
 
                     b.Property<string>("Surname")
                         .IsRequired()
@@ -53,7 +54,7 @@ namespace PetShop.EF.Migrations
 
                     b.HasKey("ID");
 
-                    b.ToTable("Customer", (string)null);
+                    b.ToTable("Customer", "PetShop");
                 });
 
             modelBuilder.Entity("PetShop.Model.Employee", b =>
@@ -164,6 +165,7 @@ namespace PetShop.EF.Migrations
                         .HasColumnType("int");
 
                     b.Property<int?>("PetID")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.Property<decimal?>("PetPrice")
@@ -176,6 +178,13 @@ namespace PetShop.EF.Migrations
 
                     b.HasIndex("CustomerID");
 
+                    b.HasIndex("EmployeeID");
+
+                    b.HasIndex("PetFoodID");
+
+                    b.HasIndex("PetID")
+                        .IsUnique();
+
                     b.ToTable("Transactions", (string)null);
                 });
 
@@ -187,10 +196,50 @@ namespace PetShop.EF.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("PetShop.Model.Employee", "Employee")
+                        .WithMany("Transactions")
+                        .HasForeignKey("EmployeeID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetShop.Model.PetFood", "PetFood")
+                        .WithMany("Transactions")
+                        .HasForeignKey("PetFoodID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PetShop.Model.Pet", "Pet")
+                        .WithOne("Transaction")
+                        .HasForeignKey("PetShop.Model.Transaction", "PetID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Customer");
+
+                    b.Navigation("Employee");
+
+                    b.Navigation("Pet");
+
+                    b.Navigation("PetFood");
                 });
 
             modelBuilder.Entity("PetShop.Model.Customer", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("PetShop.Model.Employee", b =>
+                {
+                    b.Navigation("Transactions");
+                });
+
+            modelBuilder.Entity("PetShop.Model.Pet", b =>
+                {
+                    b.Navigation("Transaction")
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PetShop.Model.PetFood", b =>
                 {
                     b.Navigation("Transactions");
                 });

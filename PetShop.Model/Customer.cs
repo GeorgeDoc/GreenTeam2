@@ -13,7 +13,7 @@ namespace PetShop.Model
         public string Surname { get; set; }
 
         //TODO: PhoneAttribute
-        public int Phone { get; set; }
+        public string Phone { get; set; }
         public string TIN { get; set; }
 
         //Relations
