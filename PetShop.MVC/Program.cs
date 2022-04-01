@@ -3,17 +3,17 @@ using PetShop.EF.Context;
 using PetShop.EF.Repositories;
 using PetShop.Model;
 
-var customer = new Customer()
-{
-    Name = "Jhon",
-    Surname = "p",
-    TIN = "123456789",
-    Phone = 1234567890
-};
+//var customer = new Customer()
+//{
+//    Name = "Jhon",
+//    Surname = "p",
+//    TIN = "123456789",
+//    Phone = 1234567890
+//};
 
-var dbContext = new PetShopContext();
-var repo = new CustomerRepo(dbContext);
-await repo.AddAsync(customer);
+//var dbContext = new PetShopContext();
+//var repo = new CustomerRepo(dbContext);
+//await repo.AddAsync(customer);
 
 
 
