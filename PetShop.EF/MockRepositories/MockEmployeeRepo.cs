@@ -16,6 +16,11 @@ namespace PetShop.EF.MockRepositories
             new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60m},
 
         };
+
+        public Task AddAsync(Employee entity) {
+            throw new NotImplementedException();
+        }
+
         public Task Create(Employee entity)
         {
 
@@ -34,14 +39,26 @@ namespace PetShop.EF.MockRepositories
             return Task.CompletedTask;
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<Employee> GetAll()
         {
             return _employees;
         }
 
+        public Task<IEnumerable<Employee>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public Employee? GetById(int id)
         {
             return _employees.SingleOrDefault(employee => employee.ID == id);
+        }
+
+        public Task<Employee?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public Task Update(int id, Employee entity)
@@ -55,6 +72,10 @@ namespace PetShop.EF.MockRepositories
             foundEmployee.EmployeeType = entity.EmployeeType;
             foundEmployee.SallaryPerMonth = entity.SallaryPerMonth;
             return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(int id, Employee entity) {
+            throw new NotImplementedException();
         }
     }
 }

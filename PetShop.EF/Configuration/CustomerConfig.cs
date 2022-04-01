@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 namespace PetShop.EF.Configuration {
     public class CustomerConfig : IEntityTypeConfiguration<Customer> {
         public void Configure(EntityTypeBuilder<Customer> builder) {
-            builder.ToTable("Customer");
+            builder.ToTable("Customer", "PetShop");
             builder.HasKey(customer=>customer.ID);
             builder.Property(customer => customer.ID).ValueGeneratedOnAdd();
             builder.Property(customer => customer.Name).HasMaxLength(maxLength: 100);

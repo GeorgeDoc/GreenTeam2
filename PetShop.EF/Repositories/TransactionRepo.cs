@@ -10,6 +10,10 @@ namespace PetShop.EF.Repositories
 {
     internal class TransactionRepo : IEntityRepo<Transaction>
     {
+        public Task AddAsync(Transaction entity) {
+            throw new NotImplementedException();
+        }
+
         public async Task Create(Transaction entity)
         {
             using var context = new PetShopContext();
@@ -28,16 +32,28 @@ namespace PetShop.EF.Repositories
             await context.SaveChangesAsync();
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<Transaction> GetAll()
         {
             using var context = new PetShopContext();
             return context.Transactions.ToList();
         }
 
+        public Task<IEnumerable<Transaction>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public Transaction? GetById(int id)
         {
             using var context = new PetShopContext();
             return context.Transactions.Where(transaction => transaction.ID == id).SingleOrDefault();
+        }
+
+        public Task<Transaction?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public async Task Update(int id, Transaction entity)
@@ -58,6 +74,10 @@ namespace PetShop.EF.Repositories
             foundTransaction.PetFoodPrice=entity.PetFoodPrice;
             foundTransaction.TotalPrice=entity.TotalPrice;
             await context.SaveChangesAsync();
+        }
+
+        public Task UpdateAsync(int id, Transaction entity) {
+            throw new NotImplementedException();
         }
     }
 }

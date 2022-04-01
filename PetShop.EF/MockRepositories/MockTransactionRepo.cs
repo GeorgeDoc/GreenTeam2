@@ -15,6 +15,11 @@ namespace PetShop.EF.MockRepositories
             new Transaction(){ID = 1, CustomerID = 1,EmployeeID=1,PetID=1,PetPrice=300,PetFoodID=1,PetFoodQty=3,PetFoodPrice=15,TotalPrice=330},
             new Transaction(){ID = 2, CustomerID = 2,EmployeeID=1,PetID=2,PetPrice=50,PetFoodID=3,PetFoodQty=5,PetFoodPrice=5,TotalPrice=70},
         };
+
+        public Task AddAsync(Transaction entity) {
+            throw new NotImplementedException();
+        }
+
         public Task Create(Transaction entity)
         {
 
@@ -33,14 +38,26 @@ namespace PetShop.EF.MockRepositories
             return Task.CompletedTask;
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<Transaction> GetAll()
         {
             return _transactions;
         }
 
+        public Task<IEnumerable<Transaction>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public Transaction? GetById(int id)
         {
             return _transactions.SingleOrDefault(transaction => transaction.ID == id);
+        }
+
+        public Task<Transaction?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public Task Update(int id, Transaction entity)
@@ -59,6 +76,10 @@ namespace PetShop.EF.MockRepositories
             foundTransaction.PetFoodPrice = entity.PetFoodPrice;
             foundTransaction.TotalPrice = entity.TotalPrice;
             return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(int id, Transaction entity) {
+            throw new NotImplementedException();
         }
     }
 }

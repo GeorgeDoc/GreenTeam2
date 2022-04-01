@@ -9,10 +9,18 @@ namespace PetShop.EF.Repositories
     public interface IEntityRepo<TEntity>
         where TEntity : class
     {
-        List<TEntity> GetAll();
-        TEntity? GetById(int id);
-        Task Create(TEntity entity);
-        Task Update(int id,TEntity entity);
-        Task Delete(int id);
+     
+        Task<IEnumerable<TEntity>> GetAllAsync();
+
+        Task<TEntity?> GetByIdAsync(int id);
+        [Obsolete("Please use AddAsync")]
+
+        Task AddAsync(TEntity entity);
+
+    
+        Task UpdateAsync(int id, TEntity entity);
+
+        
+        Task DeleteAsync(int id);
     }
 }

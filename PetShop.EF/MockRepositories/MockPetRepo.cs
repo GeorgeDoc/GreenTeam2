@@ -19,6 +19,11 @@ namespace PetShop.EF.MockRepositories
             //-----------------------------------------------------REALLY UNHEALTHY FORGETS OFTEN BUT EXPENSIVE (MOVIE STAR)------
             new Pet(){ID = 4, Breed="Dory",AnimalType=AnimalType.Fish,PetStatus=PetStatus.Unhealthy,Price=5000,Cost=500},
         };
+
+        public Task AddAsync(Pet entity) {
+            throw new NotImplementedException();
+        }
+
         public Task Create(Pet entity)
         {
 
@@ -37,14 +42,26 @@ namespace PetShop.EF.MockRepositories
             return Task.CompletedTask;
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<Pet> GetAll()
         {
             return _pets;
         }
 
+        public Task<IEnumerable<Pet>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public Pet? GetById(int id)
         {
             return _pets.SingleOrDefault(pet => pet.ID == id);
+        }
+
+        public Task<Pet?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public Task Update(int id, Pet entity)
@@ -59,6 +76,10 @@ namespace PetShop.EF.MockRepositories
             foundPet.Price = entity.Price;
             foundPet.Cost = entity.Cost;
             return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(int id, Pet entity) {
+            throw new NotImplementedException();
         }
     }
 }

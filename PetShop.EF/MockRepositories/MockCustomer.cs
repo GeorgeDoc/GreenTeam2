@@ -18,6 +18,11 @@ namespace PetShop.EF.MockRepositories
             new Customer(){ ID=3, Name="Theodoros",Surname="Petsagkas",Phone=1230987654, TIN="1230987654"},
             new Customer(){ID=4, Name="Dimitris",Surname="Tserkezidis",Phone=0981234567, TIN="0981234567"}
         };
+
+        public Task AddAsync(Customer entity) {
+            throw new NotImplementedException();
+        }
+
         public  Task Create(Customer entity)
         {
                 
@@ -36,14 +41,26 @@ namespace PetShop.EF.MockRepositories
             return Task.CompletedTask;
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<Customer> GetAll()
         {
             return _customers;
         }
 
+        public Task<IEnumerable<Customer>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public Customer? GetById(int id)
         {
             return _customers.SingleOrDefault(customer => customer.ID == id);
+        }
+
+        public Task<Customer?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public Task Update(int id, Customer entity)
@@ -57,6 +74,10 @@ namespace PetShop.EF.MockRepositories
             foundCustomer.Phone = entity.Phone;
             foundCustomer.TIN = entity.TIN;
             return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(int id, Customer entity) {
+            throw new NotImplementedException();
         }
     }
 }

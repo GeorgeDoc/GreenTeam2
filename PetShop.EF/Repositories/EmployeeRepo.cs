@@ -10,6 +10,10 @@ namespace PetShop.EF.Repositories
 {
     public class EmployeeRepo : IEntityRepo<Employee>
     {
+        public Task AddAsync(Employee entity) {
+            throw new NotImplementedException();
+        }
+
         public async Task Create(Employee entity)
         {
             using var context = new PetShopContext();
@@ -28,16 +32,28 @@ namespace PetShop.EF.Repositories
             await context.SaveChangesAsync();
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<Employee> GetAll()
         {
             using var context = new PetShopContext();
             return context.Employees.ToList();
         }
 
+        public Task<IEnumerable<Employee>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public Employee? GetById(int id)
         {
             using var context = new PetShopContext();
             return context.Employees.Where(employee => employee.ID == id).SingleOrDefault();
+        }
+
+        public Task<Employee?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public async Task Update(int id, Employee entity)
@@ -52,6 +68,10 @@ namespace PetShop.EF.Repositories
             foundEmployee.EmployeeType = entity.EmployeeType;
             foundEmployee.SallaryPerMonth = entity.SallaryPerMonth;
             await context.SaveChangesAsync();
+        }
+
+        public Task UpdateAsync(int id, Employee entity) {
+            throw new NotImplementedException();
         }
     }
 }

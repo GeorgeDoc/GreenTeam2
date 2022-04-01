@@ -17,6 +17,11 @@ namespace PetShop.EF.MockRepositories
             new PetFood(){ID=3,AnimalType =AnimalType.Bird,Price=5,Cost=1},
             new PetFood(){ID=4,AnimalType =AnimalType.Fish,Price=5,Cost=1}
         };
+
+        public Task AddAsync(PetFood entity) {
+            throw new NotImplementedException();
+        }
+
         public Task Create(PetFood entity)
         {
 
@@ -35,14 +40,26 @@ namespace PetShop.EF.MockRepositories
             return Task.CompletedTask;
         }
 
+        public Task DeleteAsync(int id) {
+            throw new NotImplementedException();
+        }
+
         public List<PetFood> GetAll()
         {
             return _petFoods;
         }
 
+        public Task<IEnumerable<PetFood>> GetAllAsync() {
+            throw new NotImplementedException();
+        }
+
         public PetFood? GetById(int id)
         {
             return _petFoods.SingleOrDefault(pet => pet.ID == id);
+        }
+
+        public Task<PetFood?> GetByIdAsync(int id) {
+            throw new NotImplementedException();
         }
 
         public Task Update(int id, PetFood entity)
@@ -55,6 +72,10 @@ namespace PetShop.EF.MockRepositories
             foundFood.Price = entity.Price;
             foundFood.Cost = entity.Cost;
             return Task.CompletedTask;
+        }
+
+        public Task UpdateAsync(int id, PetFood entity) {
+            throw new NotImplementedException();
         }
     }
 }
