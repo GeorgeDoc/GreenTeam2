@@ -9,15 +9,19 @@ namespace PetShop.EF.Migrations
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.EnsureSchema(
+                name: "PetShop");
+
             migrationBuilder.CreateTable(
                 name: "Customer",
+                schema: "PetShop",
                 columns: table => new
                 {
                     ID = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
                     Name = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
                     Surname = table.Column<string>(type: "nvarchar(100)", maxLength: 100, nullable: false),
-                    Phone = table.Column<int>(type: "int", precision: 10, nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(10)", maxLength: 10, nullable: false),
                     TIN = table.Column<string>(type: "nvarchar(9)", maxLength: 9, nullable: false)
                 },
                 constraints: table =>
@@ -82,7 +86,7 @@ namespace PetShop.EF.Migrations
                     Date = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CustomerID = table.Column<int>(type: "int", nullable: false),
                     EmployeeID = table.Column<int>(type: "int", nullable: false),
-                    PetID = table.Column<int>(type: "int", nullable: true),
+                    PetID = table.Column<int>(type: "int", nullable: false),
                     PetPrice = table.Column<decimal>(type: "decimal(10,2)", nullable: true),
                     PetFoodID = table.Column<int>(type: "int", nullable: false),
                     PetFoodQty = table.Column<int>(type: "int", nullable: false),
@@ -95,7 +99,26 @@ namespace PetShop.EF.Migrations
                     table.ForeignKey(
                         name: "FK_Transactions_Customer_CustomerID",
                         column: x => x.CustomerID,
+                        principalSchema: "PetShop",
                         principalTable: "Customer",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transactions_Employees_EmployeeID",
+                        column: x => x.EmployeeID,
+                        principalTable: "Employees",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transactions_PetFood_PetFoodID",
+                        column: x => x.PetFoodID,
+                        principalTable: "PetFood",
+                        principalColumn: "ID",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_Transactions_Pets_PetID",
+                        column: x => x.PetID,
+                        principalTable: "Pets",
                         principalColumn: "ID",
                         onDelete: ReferentialAction.Cascade);
                 });
@@ -104,10 +127,33 @@ namespace PetShop.EF.Migrations
                 name: "IX_Transactions_CustomerID",
                 table: "Transactions",
                 column: "CustomerID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_EmployeeID",
+                table: "Transactions",
+                column: "EmployeeID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_PetFoodID",
+                table: "Transactions",
+                column: "PetFoodID");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Transactions_PetID",
+                table: "Transactions",
+                column: "PetID",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Transactions");
+
+            migrationBuilder.DropTable(
+                name: "Customer",
+                schema: "PetShop");
+
             migrationBuilder.DropTable(
                 name: "Employees");
 
@@ -116,12 +162,6 @@ namespace PetShop.EF.Migrations
 
             migrationBuilder.DropTable(
                 name: "Pets");
-
-            migrationBuilder.DropTable(
-                name: "Transactions");
-
-            migrationBuilder.DropTable(
-                name: "Customer");
         }
     }
 }

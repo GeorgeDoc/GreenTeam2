@@ -11,16 +11,9 @@ namespace PetShop.EF.Repositories
     {
      
         Task<IEnumerable<TEntity>> GetAllAsync();
-
         Task<TEntity?> GetByIdAsync(int id);
-        [Obsolete("Please use AddAsync")]
-
         Task AddAsync(TEntity entity);
-
-    
         Task UpdateAsync(int id, TEntity entity);
-
-        
         Task DeleteAsync(int id);
     }
 }

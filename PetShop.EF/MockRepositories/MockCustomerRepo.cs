@@ -13,10 +13,10 @@ namespace PetShop.EF.MockRepositories
     {
         private List<Customer> _customers = new List<Customer>
         {
-            new Customer(){ ID=1, Name="Giannis",Surname="Polychroniadis", Phone = 1234567890, TIN="1234567890"},
-            new Customer(){ ID=2, Name="Giorge",Surname="Aivaliotis", Phone=0987654321, TIN="0987654321"},
-            new Customer(){ ID=3, Name="Theodoros",Surname="Petsagkas",Phone=1230987654, TIN="1230987654"},
-            new Customer(){ID=4, Name="Dimitris",Surname="Tserkezidis",Phone=0981234567, TIN="0981234567"}
+            new Customer(){ ID=1, Name="Giannis",Surname="Polychroniadis", Phone = "1234567890", TIN="1234567890"},
+            new Customer(){ ID=2, Name="Giorge",Surname="Aivaliotis", Phone="0987654321", TIN="0987654321"},
+            new Customer(){ ID=3, Name="Theodoros",Surname="Petsagkas",Phone="1230987654", TIN="1230987654"},
+            new Customer(){ID=4, Name="Dimitris",Surname="Tserkezidis",Phone="0981234567", TIN="0981234567"}
         };
 
         public Task AddAsync(Customer entity) {

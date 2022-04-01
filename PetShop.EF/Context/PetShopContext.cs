@@ -14,7 +14,7 @@ namespace PetShop.EF.Context {
         public PetShopContext() {
 
         }
-
+   
         //New ctor ????
         public PetShopContext(DbContextOptions options) : base(options) {
         }
@@ -42,7 +42,7 @@ namespace PetShop.EF.Context {
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) {
             optionsBuilder.UseSqlServer(
-                "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=PetShopTest2;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
+                "Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=PetShopTest;Integrated Security=True;Connect Timeout=30;Encrypt=False;TrustServerCertificate=False;ApplicationIntent=ReadWrite;MultiSubnetFailover=False");
             base.OnConfiguring(optionsBuilder);
         }
 
