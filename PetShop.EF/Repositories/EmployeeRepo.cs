@@ -10,6 +10,8 @@ namespace PetShop.EF.Repositories
 {
     public class EmployeeRepo : IEntityRepo<Employee>
     {
+        private readonly PetShopContext context;
+
         public Task AddAsync(Employee entity) {
             throw new NotImplementedException();
         }
@@ -72,6 +74,13 @@ namespace PetShop.EF.Repositories
 
         public Task UpdateAsync(int id, Employee entity) {
             throw new NotImplementedException();
+        }
+
+        public void AddLogic(Employee entity, PetShopContext context) {
+            if(entity.ID != 0) {
+                throw new ArgumentException("Given entity should not have Id set", nameof(entity));
+            }
+            context.Employees.Add(entity);
         }
     }
 }
