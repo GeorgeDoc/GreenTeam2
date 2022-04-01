@@ -25,12 +25,14 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+
 //Dababase Setup
 builder.Services.AddDbContext<PetShopContext>();
-builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
+//builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
 
 //Mock Setup
-//builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
+builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
 
 var app = builder.Build();
 
