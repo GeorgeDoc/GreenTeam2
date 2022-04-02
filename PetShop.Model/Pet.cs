@@ -8,7 +8,8 @@ namespace PetShop.Model
 {
     public class Pet: Product
     {
-        public string Breed { get; set; }        
+        public string Breed { get; set; }     
+
         public PetStatus PetStatus { get; set; }
 
         //Relations
