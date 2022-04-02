@@ -1,4 +1,5 @@
-﻿using PetShop.EF.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using PetShop.EF.Context;
 using PetShop.Model;
 using System;
 using System.Collections.Generic;
@@ -10,67 +11,63 @@ namespace PetShop.EF.Repositories
 {
     public class PetFoodRepo : IEntityRepo<PetFood>
     {
-        public Task AddAsync(PetFood entity) {
-            throw new NotImplementedException();
+        private readonly PetShopContext context;
+
+        public PetFoodRepo(PetShopContext dbContext)
+        {
+            context = dbContext;
+        }
+        public async Task AddAsync(PetFood entity) {
+            AddLogic(entity, context);
+            await context.SaveChangesAsync();
+        }                
+
+        public async Task DeleteAsync(int id) {
+            DeleteLogic(id, context);
+            await context.SaveChangesAsync();
+        }        
+
+        public async Task<IEnumerable<PetFood>> GetAllAsync() {
+            return await context.PetFoods.ToListAsync();
+        }        
+
+        public async Task<PetFood?> GetByIdAsync(int id) {
+            return await context.PetFoods.SingleOrDefaultAsync(PetFood => PetFood.ID == id);
+        }       
+
+        public async Task UpdateAsync(int id, PetFood entity) {
+            UpdateLogic(id, entity, context);
+            await context.SaveChangesAsync();
         }
 
-        public async Task Create(PetFood entity)
+        private void AddLogic(PetFood entity, PetShopContext context)
         {
-            using var context = new PetShopContext();
+            if (entity.ID != 0)
+                throw new ArgumentException("Given entity should not have Id set", nameof(entity));
+
             context.PetFoods.Add(entity);
-            await context.SaveChangesAsync();
         }
 
-        public async Task Delete(int id)
+
+        private void DeleteLogic(int id, PetShopContext context)
         {
-            using var context = new PetShopContext();
-            var foundFood = context.PetFoods.SingleOrDefault(food => food.ID == id);
-            if (foundFood is null)
-                return;
+            var dbPetFood = context.PetFoods.SingleOrDefault(petFood => petFood.ID == id);
+            if (dbPetFood is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
-            context.PetFoods.Remove(foundFood);
-            await context.SaveChangesAsync();
+            context.PetFoods.Remove(dbPetFood);
         }
 
-        public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public List<PetFood> GetAll()
+        private void UpdateLogic(int id, PetFood entity, PetShopContext context)
         {
-            using var context = new PetShopContext();
-            return context.PetFoods.ToList();
-        }
+            var dbPetFood = context.PetFoods.SingleOrDefault(petFood => petFood.ID == id);
+            if (dbPetFood is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
-        public Task<IEnumerable<PetFood>> GetAllAsync() {
-            throw new NotImplementedException();
-        }
 
-        public PetFood? GetById(int id)
-        {
-            using var context = new PetShopContext();
-            return context.PetFoods.Where(food => food.ID == id).SingleOrDefault();
-        }
-
-        public Task<PetFood?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public async Task Update(int id, PetFood entity)
-        {
-            using var context = new PetShopContext();
-            var foundFood = context.PetFoods.SingleOrDefault(food => food.ID == id);
-            if (foundFood is null)
-                return;
-
-            foundFood.AnimalType = entity.AnimalType;
-            foundFood.Price=entity.Price;
-            foundFood.Cost=entity.Cost;
-            await context.SaveChangesAsync();
-        }
-
-        public Task UpdateAsync(int id, PetFood entity) {
-            throw new NotImplementedException();
+            dbPetFood.AnimalType = entity.AnimalType;
+            dbPetFood.Price = entity.Price;
+            dbPetFood.Cost = entity.Cost;           
         }
     }
 }
