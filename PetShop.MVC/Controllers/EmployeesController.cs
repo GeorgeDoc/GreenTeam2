@@ -9,22 +9,24 @@ using Microsoft.EntityFrameworkCore;
 using PetShop.EF.Context;
 using PetShop.EF.Repositories;
 using PetShop.Model;
+using PetShop.MVC.Models;
 
 namespace PetShop.MVC.Controllers
 {
     public class EmployeesController : Controller
     {
         private readonly PetShopContext _context;
-        private readonly IEntityRepo<Employee> _emplyeeRepo;
-        public EmployeesController(PetShopContext context)
+
+        private readonly IEntityRepo<Employee> _employeeRepo;
+        public EmployeesController(IEntityRepo<Employee> employeeRepo)
         {
-            _context = context;
+            _employeeRepo = employeeRepo;
         }
 
         // GET: Employees
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Employees.ToListAsync());
+            return View(await _employeeRepo.GetAllAsync());
         }
 
         // GET: Employees/Details/5
@@ -35,8 +37,7 @@ namespace PetShop.MVC.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var employee = await _employeeRepo.GetByIdAsync(id.Value); //.Value επιστρέφει την non-null τιμή
             if (employee == null)
             {
                 return NotFound();
@@ -56,15 +57,17 @@ namespace PetShop.MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Name,Surname,EmployeeType,SallaryPerMonth,ID")] Employee employee)
-        {
-            if (ModelState.IsValid)
+        public async Task<IActionResult> Create([Bind("Name,Surname,EmployeeType,SallaryPerMonth")] EmployeeCreateViewModel employee)
+        {   //normally we don't want a new id here, it's created anyway by the configure
+            if (ModelState.IsValid) // if model is valid, do what you gotta, then return to Index page
             {
+                var newEmployee  = new Employee();
+                _employeeRepo.AddAsync(newEmployee);
                 _context.Add(employee);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(employee);
+            return View(employee); // if not valid, return to Create page to correct your mistakes
         }
 
         // GET: Employees/Edit/5
@@ -75,7 +78,7 @@ namespace PetShop.MVC.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees.FindAsync(id);
+            var employee = await _employeeRepo.GetByIdAsync(id.Value);
             if (employee == null)
             {
                 return NotFound();
