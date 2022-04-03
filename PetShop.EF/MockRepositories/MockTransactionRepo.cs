@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace PetShop.EF.MockRepositories
 {
-    internal class MockTransactionRepo : IEntityRepo<Transaction>
+    public class MockTransactionRepo : IEntityRepo<Transaction>
     {
         private List<Transaction> _transactions = new List<Transaction>
         {
@@ -17,54 +17,51 @@ namespace PetShop.EF.MockRepositories
         };
 
         public Task AddAsync(Transaction entity) {
-            throw new NotImplementedException();
-        }
-
-        public Task Create(Transaction entity)
-        {
-
-            _transactions.Add(entity);
-            return Task.CompletedTask;
-        }
-
-        public Task Delete(int id)
-        {
-
-            var foundTransaction = _transactions.SingleOrDefault(transaction => transaction.ID == id);
-            if (foundTransaction is null)
-                return Task.CompletedTask;
-
-            _transactions.Remove(foundTransaction);
+            AddLogic(entity);
             return Task.CompletedTask;
         }
 
         public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public List<Transaction> GetAll()
-        {
-            return _transactions;
+            DeleteLogic(id);
+            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<Transaction>> GetAllAsync() {
-            throw new NotImplementedException();
-        }
-
-        public Transaction? GetById(int id)
-        {
-            return _transactions.SingleOrDefault(transaction => transaction.ID == id);
+            return Task.FromResult(_transactions.AsEnumerable());
         }
 
         public Task<Transaction?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
+            return Task.FromResult(_transactions.SingleOrDefault(transaction => transaction.ID == id));
         }
 
-        public Task Update(int id, Transaction entity)
+        public Task UpdateAsync(int id, Transaction entity) {
+            UpdateLogic(id, entity);
+            return Task.CompletedTask;
+        }
+
+        private void AddLogic(Transaction entity)
+        {
+            if (entity.ID !=0)
+                throw new ArgumentException("Given entity should not have ID set",nameof(entity));
+            var lastId = _transactions.OrderBy(transaction => transaction.ID).Last().ID;
+            entity.ID = ++lastId;
+            _transactions.Add(entity);
+        }
+
+        private void DeleteLogic(int id)
         {
             var foundTransaction = _transactions.SingleOrDefault(transaction => transaction.ID == id);
-            if (foundTransaction is null)
-                return Task.CompletedTask;
+            if (foundTransaction != null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
+
+            _transactions.Remove(foundTransaction);
+        }
+
+        private void UpdateLogic(int id, Transaction entity)
+        {
+            var foundTransaction = _transactions.SingleOrDefault(transaction => transaction.ID==id);
+            if (foundTransaction != null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
             foundTransaction.Date = entity.Date;
             foundTransaction.CustomerID = entity.CustomerID;
@@ -75,11 +72,6 @@ namespace PetShop.EF.MockRepositories
             foundTransaction.PetFoodQty = entity.PetFoodQty;
             foundTransaction.PetFoodPrice = entity.PetFoodPrice;
             foundTransaction.TotalPrice = entity.TotalPrice;
-            return Task.CompletedTask;
-        }
-
-        public Task UpdateAsync(int id, Transaction entity) {
-            throw new NotImplementedException();
         }
     }
 }
