@@ -39,6 +39,7 @@ builder.Services.AddDbContext<PetShopContext>();
 builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
 builder.Services.AddSingleton<IEntityRepo<Pet>, MockPetRepo>();
 builder.Services.AddSingleton<IEntityRepo<PetFood>, MockPetFoodRepo>();
+builder.Services.AddSingleton<IEntityRepo<Transaction>, MockTransactionRepo>();
 
 var app = builder.Build();
 
