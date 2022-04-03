@@ -13,69 +13,81 @@ namespace PetShop.EF.MockRepositories
         private List<Employee> _employees = new List<Employee>
         {
             new Employee(){ID = 1, Name ="Takis",Surname="Manageridis",EmployeeType=EmployeeType.Manager, SallaryPerMonth=2000},
-            new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60m},
+            new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60},
+            //new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60m},
 
         };
 
-        public Task AddAsync(Employee entity) {
-            throw new NotImplementedException();
-        }
-
-        public Task Create(Employee entity)
+        public void Create(Employee entity)
         {
-
             _employees.Add(entity);
-            return Task.CompletedTask;
         }
-
-        public Task Delete(int id)
-        {
-
-            var foundEmployee = _employees.SingleOrDefault(employee => employee.ID == id);
-            if (foundEmployee is null)
-                return Task.CompletedTask;
-
-            _employees.Remove(foundEmployee);
-            return Task.CompletedTask;
-        }
-
-        public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public List<Employee> GetAll()
-        {
+        public List<Employee> GetAll() {
             return _employees;
         }
-
-        public Task<IEnumerable<Employee>> GetAllAsync() {
-            throw new NotImplementedException();
+        public Task<IEnumerable<Employee>> GetAllAsync() { // 
+            return Task.FromResult(_employees.AsEnumerable());
         }
-
-        public Employee? GetById(int id)
-        {
+        public Employee? GetById(int id) {
             return _employees.SingleOrDefault(employee => employee.ID == id);
         }
-
         public Task<Employee?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
+            return Task.FromResult(_employees.SingleOrDefault(employee => employee.ID == id));
         }
 
-        public Task Update(int id, Employee entity)
+        public void Delete(int id)
         {
             var foundEmployee = _employees.SingleOrDefault(employee => employee.ID == id);
             if (foundEmployee is null)
-                return Task.CompletedTask;
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
+
+            _employees.Remove(foundEmployee);
+        }
+
+        public async Task DeleteAsync(int id) {
+            DeleteLogic(id);
+        }
+
+
+        public void Update(int id, Employee entity)
+        {
+            UpdateLogic(id, entity);
+        }
+
+        public Task UpdateAsync(int id, Employee entity) {
+            UpdateLogic(id, entity);
+            return Task.CompletedTask;
+        }
+
+        public Task AddAsync(Employee entity) {
+            AddLogic(entity);
+            return Task.CompletedTask;  
+        }
+
+        private void AddLogic(Employee entity) {
+            if(entity.ID != 0) {
+                throw new ArgumentException("Given entity should not have ID set", nameof(entity));
+            }
+            var lastId = _employees.OrderBy(employee => employee.ID).Last().ID;
+            entity.ID = lastId;
+            _employees.Add(entity);
+        }
+        private void UpdateLogic(int id, Employee entity) {
+            var foundEmployee = _employees.SingleOrDefault(employee => employee.ID == id);
+            if (foundEmployee is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
             foundEmployee.Name = entity.Name;
             foundEmployee.Surname = entity.Surname;
             foundEmployee.EmployeeType = entity.EmployeeType;
             foundEmployee.SallaryPerMonth = entity.SallaryPerMonth;
-            return Task.CompletedTask;
         }
+        private void DeleteLogic(int id) {
+            var foundEmployee = _employees.SingleOrDefault(employee => employee.ID == id);
+            if (foundEmployee is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
-        public Task UpdateAsync(int id, Employee entity) {
-            throw new NotImplementedException();
+            _employees.Remove(foundEmployee);
         }
     }
 }

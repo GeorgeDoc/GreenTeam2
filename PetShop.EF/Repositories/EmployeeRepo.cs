@@ -1,4 +1,5 @@
-﻿using PetShop.EF.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using PetShop.EF.Context;
 using PetShop.Model;
 using System;
 using System.Collections.Generic;
@@ -10,30 +11,33 @@ namespace PetShop.EF.Repositories
 {
     public class EmployeeRepo : IEntityRepo<Employee>
     {
-        public Task AddAsync(Employee entity) {
-            throw new NotImplementedException();
+        private readonly PetShopContext context;
+
+        public async Task AddAsync(Employee entity) {
+            await using var context = new PetShopContext();
+
+            AddLogic(entity, context);
+            context.SaveChangesAsync(); 
         }
 
-        public async Task Create(Employee entity)
-        {
-            using var context = new PetShopContext();
-            context.Employees.Add(entity);
-            await context.SaveChangesAsync();
-        }
+        //public async Task Create(Employee entity)
+        //{
+        //    using var context = new PetShopContext();
+        //    context.Employees.Add(entity);
+        //    await context.SaveChangesAsync();
+        //}
 
-        public async Task Delete(int id)
-        {
-            using var context = new PetShopContext();
-            var foundEmployee = context.Employees.SingleOrDefault(employee => employee.ID == id);
-            if (foundEmployee is null)
-                return;
+        //public async Task Delete(int id)
+        //{
+        //    using var context = new PetShopContext();
+        //    DeleteLogic(context, id);
+        //    await context.SaveChangesAsync();
+        //}
 
-            context.Employees.Remove(foundEmployee);
-            await context.SaveChangesAsync();
-        }
-
-        public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
+        public async Task DeleteAsync(int id) {
+            await using var context = new PetShopContext();
+            DeleteLogic(context, id);
+            context.SaveChangesAsync(); 
         }
 
         public List<Employee> GetAll()
@@ -42,8 +46,9 @@ namespace PetShop.EF.Repositories
             return context.Employees.ToList();
         }
 
-        public Task<IEnumerable<Employee>> GetAllAsync() {
-            throw new NotImplementedException();
+        public async Task<IEnumerable<Employee>> GetAllAsync() {
+            await using var context = new PetShopContext();
+            return await context.Employees.ToListAsync();
         }
 
         public Employee? GetById(int id)
@@ -52,13 +57,32 @@ namespace PetShop.EF.Repositories
             return context.Employees.Where(employee => employee.ID == id).SingleOrDefault();
         }
 
-        public Task<Employee?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
+        public async Task<Employee?> GetByIdAsync(int id) {
+            await using var context = new PetShopContext();
+            return await context.Employees.Where(employee => employee.ID == id).SingleOrDefaultAsync();
         }
 
-        public async Task Update(int id, Employee entity)
-        {
-            using var context = new PetShopContext();
+        //public async Task Update(int id, Employee entity)
+        //{
+        //    using var context = new PetShopContext();
+        //    UpdateLogic(entity, context, id);
+        //    await context.SaveChangesAsync();
+        //}
+
+        public async Task UpdateAsync(int id, Employee entity) {
+            await using var context = new PetShopContext();
+            UpdateLogic(entity, context, id);
+            await context.SaveChangesAsync(); ;
+        }
+
+        public void AddLogic(Employee entity, PetShopContext context) {
+            if(entity.ID != 0) {
+                throw new ArgumentException("Given entity should not have Id set", nameof(entity));
+            }
+            context.Employees.Add(entity);
+        }
+
+        private void UpdateLogic(Employee entity, PetShopContext context, int id) {
             var foundEmployee = context.Employees.SingleOrDefault(employee => employee.ID == id);
             if (foundEmployee is null)
                 return;
@@ -67,11 +91,15 @@ namespace PetShop.EF.Repositories
             foundEmployee.Surname = entity.Surname;
             foundEmployee.EmployeeType = entity.EmployeeType;
             foundEmployee.SallaryPerMonth = entity.SallaryPerMonth;
-            await context.SaveChangesAsync();
         }
 
-        public Task UpdateAsync(int id, Employee entity) {
-            throw new NotImplementedException();
+        private void DeleteLogic(PetShopContext context, int id) {
+            var foundEmployee = context.Employees.SingleOrDefault(employee => employee.ID == id);
+            if (foundEmployee is null)
+               throw new KeyNotFoundException($"Given id '{id}' was not found in database");
+
+            context.Employees.Remove(foundEmployee);
+            context.SaveChangesAsync();
         }
     }
 }
