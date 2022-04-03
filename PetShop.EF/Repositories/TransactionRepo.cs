@@ -1,4 +1,5 @@
-﻿using PetShop.EF.Context;
+﻿using Microsoft.EntityFrameworkCore;
+using PetShop.EF.Context;
 using PetShop.Model;
 using System;
 using System.Collections.Generic;
@@ -10,74 +11,64 @@ namespace PetShop.EF.Repositories
 {
     internal class TransactionRepo : IEntityRepo<Transaction>
     {
-        public Task AddAsync(Transaction entity) {
-            throw new NotImplementedException();
+        private readonly PetShopContext _context;
+
+        public TransactionRepo(PetShopContext dbContext)
+        {
+            _context = dbContext;
         }
 
-        public async Task Create(Transaction entity)
+        public async Task AddAsync(Transaction entity) {
+            AddLogic(entity,_context);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task DeleteAsync(int id) {
+            DeleteLogic(id, _context);
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task<IEnumerable<Transaction>> GetAllAsync() {
+            return await _context.Transactions.ToListAsync();
+        }
+
+        public async Task<Transaction?> GetByIdAsync(int id) {
+            return await _context.Transactions.SingleOrDefaultAsync(transaction => transaction.ID == id);
+        }
+
+        public async Task UpdateAsync(int id, Transaction entity) {
+            UpdateLogic(id, entity,_context);
+            await _context.SaveChangesAsync();
+        }
+
+        private void AddLogic(Transaction entity,PetShopContext context)
         {
-            using var context = new PetShopContext();
+            if (entity.ID !=0)
+                throw new ArgumentException("Given entity should not have ID set", nameof(entity));
             context.Transactions.Add(entity);
-            await context.SaveChangesAsync();
         }
-
-        public async Task Delete(int id)
+        private void DeleteLogic(int id,PetShopContext context)
         {
-            using var context = new PetShopContext();
-            var foundTransaction = context.Transactions.SingleOrDefault(transaction => transaction.ID == id);
-            if (foundTransaction is null)
-                return;
-
-            context.Transactions.Remove(foundTransaction);
-            await context.SaveChangesAsync();
+            var dbTransaction = context.Transactions.SingleOrDefault(transaction => transaction.ID == id);
+            if (dbTransaction is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
+            context.Transactions.Remove(dbTransaction);
         }
-
-        public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public List<Transaction> GetAll()
+        private void UpdateLogic(int id, Transaction entity, PetShopContext context)
         {
-            using var context = new PetShopContext();
-            return context.Transactions.ToList();
-        }
+            var dbTransaction = context.Transactions.SingleOrDefault(transaction => transaction.ID == id);
+            if (dbTransaction is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
+            dbTransaction.Date=entity.Date;
+            dbTransaction.CustomerID = entity.CustomerID;
+            dbTransaction.EmployeeID = entity.EmployeeID;
+            dbTransaction.PetID=entity.PetID;
+            dbTransaction.PetPrice=entity.PetPrice;
+            dbTransaction.PetFoodID=entity.PetFoodID;
+            dbTransaction.PetFoodQty=entity.PetFoodQty;
+            dbTransaction.PetFoodPrice=entity.PetFoodPrice;
+            dbTransaction.TotalPrice=entity.TotalPrice;
 
-        public Task<IEnumerable<Transaction>> GetAllAsync() {
-            throw new NotImplementedException();
-        }
-
-        public Transaction? GetById(int id)
-        {
-            using var context = new PetShopContext();
-            return context.Transactions.Where(transaction => transaction.ID == id).SingleOrDefault();
-        }
-
-        public Task<Transaction?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public async Task Update(int id, Transaction entity)
-        {
-            using var context = new PetShopContext();
-            var foundTransaction = context.Transactions.SingleOrDefault(transaction => transaction.ID == id);
-            if (foundTransaction is null)
-                return;
-
-            //TODO:For this Im not sure
-            foundTransaction.Date=entity.Date;
-            foundTransaction.CustomerID = entity.CustomerID;
-            foundTransaction.EmployeeID = entity.EmployeeID;
-            foundTransaction.PetID=entity.PetID;
-            foundTransaction.PetPrice=entity.PetPrice;
-            foundTransaction.PetFoodID=entity.PetFoodID;
-            foundTransaction.PetFoodQty=entity.PetFoodQty;
-            foundTransaction.PetFoodPrice=entity.PetFoodPrice;
-            foundTransaction.TotalPrice=entity.TotalPrice;
-            await context.SaveChangesAsync();
-        }
-
-        public Task UpdateAsync(int id, Transaction entity) {
-            throw new NotImplementedException();
         }
     }
 }
