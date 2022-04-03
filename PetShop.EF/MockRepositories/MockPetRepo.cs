@@ -21,65 +21,57 @@ namespace PetShop.EF.MockRepositories
         };
 
         public Task AddAsync(Pet entity) {
-            throw new NotImplementedException();
-        }
-
-        public Task Create(Pet entity)
-        {
-
-            _pets.Add(entity);
-            return Task.CompletedTask;
-        }
-
-        public Task Delete(int id)
-        {
-
-            var foundPet = _pets.SingleOrDefault(pet => pet.ID == id);
-            if (foundPet is null)
-                return Task.CompletedTask;
-
-            _pets.Remove(foundPet);
+            AddLogic(entity);
             return Task.CompletedTask;
         }
 
         public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public List<Pet> GetAll()
-        {
-            return _pets;
+            DeleteLogic(id);
+            return Task.CompletedTask;
         }
 
         public Task<IEnumerable<Pet>> GetAllAsync() {
-            throw new NotImplementedException();
-        }
-
-        public Pet? GetById(int id)
-        {
-            return _pets.SingleOrDefault(pet => pet.ID == id);
+            return Task.FromResult(_pets.AsEnumerable());
         }
 
         public Task<Pet?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
+            return Task.FromResult(_pets.SingleOrDefault(pet => pet.ID == id));
         }
 
-        public Task Update(int id, Pet entity)
+        public Task UpdateAsync(int id, Pet entity) {
+            UpdateLogic(id, entity);
+            return Task.CompletedTask;
+        }
+
+        private void AddLogic(Pet entity)
+        {
+            if (entity.ID != 0)
+                throw new ArgumentException("Given entity should not have ID set", nameof(entity));
+
+            var lastId = _pets.OrderBy(pet => pet.ID).Last().ID;
+            entity.ID = ++lastId;
+            _pets.Add(entity);
+        }
+
+        private void DeleteLogic(int id)
         {
             var foundPet = _pets.SingleOrDefault(pet => pet.ID == id);
             if (foundPet is null)
-                return Task.CompletedTask;
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
 
+            _pets.Remove(foundPet);
+        }
+
+        private void UpdateLogic(int id, Pet entity)
+        {
+            var foundPet = _pets.SingleOrDefault(pet => pet.ID == id);
+            if (foundPet is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found in database");
             foundPet.Breed = entity.Breed;
             foundPet.AnimalType = entity.AnimalType;
             foundPet.PetStatus = entity.PetStatus;
             foundPet.Price = entity.Price;
             foundPet.Cost = entity.Cost;
-            return Task.CompletedTask;
-        }
-
-        public Task UpdateAsync(int id, Pet entity) {
-            throw new NotImplementedException();
         }
     }
 }
