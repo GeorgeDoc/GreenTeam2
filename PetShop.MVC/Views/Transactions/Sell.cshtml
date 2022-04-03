@@ -12,7 +12,7 @@
         <form asp-action="Sell">
             <div class="form-group">
                 <label asp-for="PetFoodID" class="control-label"></label>
-                <select asp-for="PetFoodID" class ="form-control" asp-items="PetFoodList"></select>
+                <select asp-for="PetFoodID" class ="form-control" asp-items=Model.PetFoodList></select>
             </div>
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
