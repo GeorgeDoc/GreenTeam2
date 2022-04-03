@@ -10,7 +10,7 @@ namespace PetShop.EF.MockRepositories
 {
     public class MockPetFoodRepo : IEntityRepo<PetFood>
     {
-        private List<PetFood> _petFoods = new List<PetFood>
+        private readonly List<PetFood> _petFoods = new List<PetFood>
         {
             new PetFood(){ID=1,AnimalType=AnimalType.Mammal,Price=15,Cost=10},
             new PetFood(){ID=2,AnimalType=AnimalType.Reptile,Price=20,Cost=10},
@@ -19,15 +19,9 @@ namespace PetShop.EF.MockRepositories
         };
 
         public Task AddAsync(PetFood entity) {
-            throw new NotImplementedException();
-        }
-
-        public Task Create(PetFood entity)
-        {
-
             _petFoods.Add(entity);
             return Task.CompletedTask;
-        }
+        }        
 
         public Task Delete(int id)
         {
@@ -41,25 +35,21 @@ namespace PetShop.EF.MockRepositories
         }
 
         public Task DeleteAsync(int id) {
-            throw new NotImplementedException();
-        }
-
-        public List<PetFood> GetAll()
-        {
-            return _petFoods;
-        }
+            DeleteLogic(id);
+            return Task.CompletedTask;
+        }        
 
         public Task<IEnumerable<PetFood>> GetAllAsync() {
-            throw new NotImplementedException();
+            return Task.FromResult(_petFoods.AsEnumerable());
         }
 
         public PetFood? GetById(int id)
         {
-            return _petFoods.SingleOrDefault(pet => pet.ID == id);
+            return _petFoods.SingleOrDefault(petFood => petFood.ID == id);
         }
 
         public Task<PetFood?> GetByIdAsync(int id) {
-            throw new NotImplementedException();
+            return Task.FromResult(_petFoods.SingleOrDefault(petFood => petFood.ID == id));
         }
 
         public Task Update(int id, PetFood entity)
@@ -75,7 +65,38 @@ namespace PetShop.EF.MockRepositories
         }
 
         public Task UpdateAsync(int id, PetFood entity) {
-            throw new NotImplementedException();
+            UpdateLogic(id, entity);
+            return Task.CompletedTask;
+        }
+
+        private void DeleteLogic(int id)
+        {
+            var foundPetFood = _petFoods.SingleOrDefault(todo => todo.ID == id);
+            if (foundPetFood is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found");
+
+            _petFoods.Remove(foundPetFood);
+        }
+
+        private void UpdateLogic(int id, PetFood entity)
+        {
+            var foundPetFood= _petFoods.SingleOrDefault(todo => todo.ID == id);
+            if (foundPetFood is null)
+                throw new KeyNotFoundException($"Given id '{id}' was not found");
+
+            foundPetFood.AnimalType = entity.AnimalType;
+            foundPetFood.Price = entity.Price;
+            foundPetFood.Cost = entity.Cost;
+        }
+
+        private void AddLogic(PetFood entity)
+        {
+            if (entity.ID != 0)
+                throw new ArgumentException("Given entity should not have Id set", nameof(entity));
+
+            var lastId = _petFoods.OrderBy(petFood => petFood.ID).Last().ID;
+            entity.ID = ++lastId;
+            _petFoods.Add(entity);
         }
     }
 }
