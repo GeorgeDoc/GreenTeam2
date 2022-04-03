@@ -15,7 +15,7 @@ namespace PetShop.EF.Configuration {
             builder.Property(customer => customer.ID).ValueGeneratedOnAdd();
             builder.Property(customer => customer.Name).HasMaxLength(maxLength: 100);
             builder.Property(customer => customer.Surname).HasMaxLength(maxLength: 100);
-            builder.Property(customer => customer.Phone).HasColumnType("int").HasPrecision(10); // TODO: Precision needed?!?
+            builder.Property(customer => customer.Phone).HasMaxLength(maxLength: 10);
             builder.Property(customer => customer.TIN).HasMaxLength(maxLength: 9);
 
 

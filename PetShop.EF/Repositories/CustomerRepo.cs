@@ -72,9 +72,7 @@ namespace PetShop.EF.Repositories
             dbCustomer.Surname = entity.Surname;
             dbCustomer.TIN = entity.TIN;
             dbCustomer.Phone = entity.Phone;
-         
-
-            
+          
         }
     }
 
