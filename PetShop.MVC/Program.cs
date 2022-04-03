@@ -29,11 +29,12 @@ builder.Services.AddControllersWithViews();
 
 //Dababase Setup
 builder.Services.AddDbContext<PetShopContext>();
-//builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
+builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
+builder.Services.AddTransient<IEntityRepo<Pet>, PetRepo>();
 
 //Mock Setup
-builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
-builder.Services.AddSingleton<IEntityRepo<Pet>, MockPetRepo>();
+//builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
+//builder.Services.AddSingleton<IEntityRepo<Pet>, MockPetRepo>();
 
 var app = builder.Build();
 

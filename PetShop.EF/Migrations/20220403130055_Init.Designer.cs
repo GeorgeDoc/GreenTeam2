@@ -12,8 +12,8 @@ using PetShop.EF.Context;
 namespace PetShop.EF.Migrations
 {
     [DbContext(typeof(PetShopContext))]
-    [Migration("20220401145224_Initial")]
-    partial class Initial
+    [Migration("20220403130055_Init")]
+    partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
