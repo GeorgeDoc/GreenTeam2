@@ -92,12 +92,11 @@ namespace PetShop.MVC.Models
     public class TransactionSellViewModel {
         public Pet Pet { get; set; }
         public List<PetFood> PetFoods { get; set; }
-        public List<Customer> Customers { get; set; }
-        public List<Employee> Employees { get; set; }
         public decimal TotalPrice { get; set; }
         public int PetFoodQty { get; set; }
         public decimal PetFoodPrice { get; set; } 
-        public SelectList SelectList { get; set; }
+        public int PetFoodID { get; set; }
+        public SelectList PetFoodList { get; set; }
 
     }
 }

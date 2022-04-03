@@ -50,14 +50,10 @@ namespace PetShop.MVC.Controllers
                     selectedPetFoods.Add(item);
             }
 
+            var vm = new TransactionSellViewModel();
+            vm.PetFoodList = new SelectList(selectedPetFoods,"ID","Price");
 
-
-
-
-
-
-
-            return View();
+            return View(vm);
         }
             // GET: Transactions
             public async Task<IActionResult> Index()
