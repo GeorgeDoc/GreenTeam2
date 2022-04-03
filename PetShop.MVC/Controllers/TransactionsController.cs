@@ -17,14 +17,50 @@ namespace PetShop.MVC.Controllers
     {
         private readonly PetShopContext _context;
         private readonly IEntityRepo<Transaction> _transactionRepo;
+        private readonly IEntityRepo<Pet> _petRepo;
+        private readonly IEntityRepo<PetFood> _petFoodRepo;
 
-        public TransactionsController(IEntityRepo<Transaction> transactionRepo)
+
+        public TransactionsController(IEntityRepo<Transaction> transactionRepo, IEntityRepo<Pet> petRepo, IEntityRepo<PetFood> petFoodRepo)
         {
             _transactionRepo = transactionRepo;
+            _petRepo=petRepo;
+            _petFoodRepo = petFoodRepo;
         }
 
-        // GET: Transactions
-        public async Task<IActionResult> Index()
+
+        public async Task<IActionResult> Sell(int? id) {
+
+            if (id == null) {
+                return NotFound();
+            }
+
+            var pet = await _petRepo.GetByIdAsync(id.Value);
+            if (pet == null) {
+                return NotFound();
+            }
+
+
+            var petFoods = await _petFoodRepo.GetAllAsync();
+            var selectedPetFoods = new List<PetFood>();
+            
+
+            foreach (var item in petFoods) {
+                if(item.AnimalType == pet.AnimalType)
+                    selectedPetFoods.Add(item);
+            }
+
+
+
+
+
+
+
+
+            return View();
+        }
+            // GET: Transactions
+            public async Task<IActionResult> Index()
         {
             //var petShopContext = _context.Transactions.Include(t => t.Customer).Include(t => t.Employee).Include(t => t.Pet).Include(t => t.PetFood);
             return View(await _transactionRepo.GetAllAsync());
@@ -62,9 +98,15 @@ namespace PetShop.MVC.Controllers
         }
 
         // GET: Transactions/Create
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
-            return View();
+            var petList = await _petRepo.GetAllAsync();
+            var canBeSoldList = new List<Pet>();
+            foreach (var item in petList) {
+                if (item.PetStatus != PetStatus.Unhealthy)
+                    canBeSoldList.Add(item);
+            }
+            return View(canBeSoldList);
         }
 
         // POST: Transactions/Create
