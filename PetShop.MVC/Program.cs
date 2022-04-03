@@ -27,6 +27,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllersWithViews();
 
 
+
 //Dababase Setup
 builder.Services.AddDbContext<PetShopContext>();
 builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
