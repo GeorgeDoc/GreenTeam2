@@ -1,0 +1,48 @@
+﻿@model TransactionSellViewModel
+
+@{
+    ViewData["Title"] = "Sell";
+}
+
+<h1>Sell</h1>
+<h4>Transaction</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Checkout">
+
+            <input readonly type="hidden" asp-for="PetID" class="form-control" value="@Model.Pet.ID"/>
+            <label asp-for=Pet>Breed: @Model.Pet.Breed Price: @Model.Pet.Price</label>
+            <div class="form-group">
+                <label asp-for="PetFoodID" class="control-label">Pet Food Price</label>
+                <select asp-for="PetFoodID" class ="form-control" asp-items=Model.PetFoodList></select>
+            </div>
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="PetFoodQty" class="control-label"></label>
+                <input asp-for="PetFoodQty" min="1" class="form-control" value="1"/>
+                <span asp-validation-for="PetFoodQty" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="CustomerID" class="control-label">Customer Name</label>
+                <select asp-for="CustomerID" class="form-control" asp-items=Model.CustomersList></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="EmployeeID" class="control-label">Employee Name</label>
+                <select asp-for="EmployeeID" class="form-control" asp-items=Model.EmployeesList></select>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Checkout" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
