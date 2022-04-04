@@ -102,8 +102,9 @@ namespace PetShop.MVC.Controllers
             {
                 try
                 {
-                    _context.Update(employee);
-                    await _context.SaveChangesAsync();
+                    var dbEmployee = await _employeeRepo.GetByIdAsync(employee.ID);
+                    if (dbEmployee is null)
+                        return BadRequest($"Can't find an empployee with id '{id}'");
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -129,8 +130,7 @@ namespace PetShop.MVC.Controllers
                 return NotFound();
             }
 
-            var employee = await _context.Employees
-                .FirstOrDefaultAsync(m => m.ID == id);
+            var employee = await _employeeRepo.GetByIdAsync(id.Value);
             if (employee == null)
             {
                 return NotFound();
@@ -144,9 +144,7 @@ namespace PetShop.MVC.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var employee = await _context.Employees.FindAsync(id);
-            _context.Employees.Remove(employee);
-            await _context.SaveChangesAsync();
+            await _employeeRepo.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
 
