@@ -1,0 +1,60 @@
+﻿@model TransactionSellViewModel
+
+@{
+    ViewData["Title"] = "Sell";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>Transaction</h4>
+    <hr />
+    <dl class="row">
+@*        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Date)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Date)
+        </dd>*@
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PetPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PetPrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PetFoodQty)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PetFoodQty)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.PetFoodPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.PetFoodPrice)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.TotalPrice)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.TotalPrice)
+        </dd>
+    </dl>
+</div>
+<div>
+<form  asp-action="Sell">
+    <input readonly type="hidden" asp-for="PetPrice" class="form-control" value="@Model.PetPrice"/>
+    <input readonly type="hidden" asp-for="PetFoodPrice" class="form-control" value="@Model.PetFoodPrice"/>
+    <input readonly type="hidden" asp-for="PetFoodQty" class="form-control" value="@Model.PetFoodQty"/>
+    <input readonly type="hidden" asp-for="CustomerID" class="form-control" value="@Model.CustomerID"/>
+    <input readonly type="hidden" asp-for="EmployeeID" class="form-control" value="@Model.EmployeeID"/>
+    <input readonly type="hidden" asp-for="PetID" class="form-control" value="@Model.PetID"/>
+    <input readonly type="hidden" asp-for="PetFoodID" class="form-control" value="@Model.PetFoodID"/>
+    <input readonly type="hidden" asp-for="TotalPrice" class="form-control" value="@Model.TotalPrice"/>
+    <div class="form-group">
+        <input type="submit" value="Finish" class="btn btn-primary" />
+    </div>
+</form>
+    <a asp-action="Index">Back to List</a>
+</div>
