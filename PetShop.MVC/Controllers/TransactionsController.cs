@@ -19,13 +19,16 @@ namespace PetShop.MVC.Controllers
         private readonly IEntityRepo<Transaction> _transactionRepo;
         private readonly IEntityRepo<Pet> _petRepo;
         private readonly IEntityRepo<PetFood> _petFoodRepo;
+        private readonly IEntityRepo<Customer> _customerRepo;
 
 
-        public TransactionsController(IEntityRepo<Transaction> transactionRepo, IEntityRepo<Pet> petRepo, IEntityRepo<PetFood> petFoodRepo)
+        public TransactionsController(IEntityRepo<Transaction> transactionRepo,
+            IEntityRepo<Pet> petRepo, IEntityRepo<PetFood> petFoodRepo, IEntityRepo<Customer> customerRepo)
         {
             _transactionRepo = transactionRepo;
             _petRepo=petRepo;
             _petFoodRepo = petFoodRepo;
+            _customerRepo=customerRepo;
         }
 
 
@@ -34,7 +37,20 @@ namespace PetShop.MVC.Controllers
             if (id == null) {
                 return NotFound();
             }
+            var customer = await _customerRepo.GetByIdAsync(id.Value);
+            if (customer == null)
+                return NotFound();
 
+            var customers=await _customerRepo.GetAllAsync();
+            var selectedCustomers = new List<Customer>();
+            foreach (var item in customers)
+            {
+                selectedCustomers.Add(item as Customer);
+            }
+
+            var selectedCustomersView = new TransactionSellViewModel();
+            selectedCustomersView.Customers = new SelectList(selectedCustomers, "ID", "Name");
+            return View(selectedCustomersView);
             var pet = await _petRepo.GetByIdAsync(id.Value);
             if (pet == null) {
                 return NotFound();
