@@ -22,11 +22,9 @@ namespace PetShop.EF.Configuration {
             builder.Property(transaction => transaction.TotalPrice).HasColumnType("decimal(10,2)");
 
 
-            builder.HasOne(transaction => transaction.Customer).WithMany(customer => customer.Transactions).HasForeignKey(transaction => transaction.CustomerID);
-            builder.HasOne(transaction => transaction.Employee).WithMany(employee => employee.Transactions).HasForeignKey(transaction => transaction.EmployeeID);
-            builder.HasOne(transaction => transaction.PetFood).WithMany(petFood => petFood.Transactions).HasForeignKey(transaction => transaction.PetFoodID);
-
-            builder.HasOne(transaction => transaction.Pet).WithOne(pet => pet.Transaction).HasForeignKey<Transaction>(transaction => transaction.PetID);
+            builder.HasOne(transaction => transaction.Customer).WithMany(customer => customer.Transactions).HasForeignKey(transaction => transaction.CustomerID).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(transaction => transaction.Employee).WithMany(employee => employee.Transactions).HasForeignKey(transaction => transaction.EmployeeID).OnDelete(DeleteBehavior.Restrict);
+            builder.HasOne(transaction => transaction.Pet).WithOne(pet => pet.Transaction).HasForeignKey<Transaction>(transaction => transaction.PetID).OnDelete(DeleteBehavior.Restrict);
             
 
 

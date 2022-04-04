@@ -12,8 +12,8 @@ using PetShop.EF.Context;
 namespace PetShop.EF.Migrations
 {
     [DbContext(typeof(PetShopContext))]
-    [Migration("20220403130055_Init")]
-    partial class Init
+    [Migration("20220404140637_Restricted_Delete")]
+    partial class Restricted_Delete
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -193,13 +193,13 @@ namespace PetShop.EF.Migrations
                     b.HasOne("PetShop.Model.Customer", "Customer")
                         .WithMany("Transactions")
                         .HasForeignKey("CustomerID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PetShop.Model.Employee", "Employee")
                         .WithMany("Transactions")
                         .HasForeignKey("EmployeeID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("PetShop.Model.PetFood", "PetFood")
@@ -211,7 +211,7 @@ namespace PetShop.EF.Migrations
                     b.HasOne("PetShop.Model.Pet", "Pet")
                         .WithOne("Transaction")
                         .HasForeignKey("PetShop.Model.Transaction", "PetID")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Customer");

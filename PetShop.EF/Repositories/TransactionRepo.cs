@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace PetShop.EF.Repositories
 {
-    internal class TransactionRepo : IEntityRepo<Transaction>
+    public class TransactionRepo : IEntityRepo<Transaction>
     {
         private readonly PetShopContext _context;
 

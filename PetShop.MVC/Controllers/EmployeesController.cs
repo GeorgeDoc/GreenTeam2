@@ -10,12 +10,12 @@ using PetShop.EF.Context;
 using PetShop.EF.Repositories;
 using PetShop.Model;
 using PetShop.MVC.Models;
+using static PetShop.MVC.Models.EmployeeCreateViewModel;
 
 namespace PetShop.MVC.Controllers
 {
     public class EmployeesController : Controller
     {
-        private readonly PetShopContext _context;
 
         private readonly IEntityRepo<Employee> _employeeRepo;
         public EmployeesController(IEntityRepo<Employee> employeeRepo)
@@ -61,10 +61,14 @@ namespace PetShop.MVC.Controllers
         {   //normally we don't want a new id here, it's created anyway by the configure
             if (ModelState.IsValid) // if model is valid, do what you gotta, then return to Index page
             {
-                var newEmployee  = new Employee();
+                var newEmployee = new Employee()
+                {
+                    Name = employee.Name,
+                    Surname = employee.Surname,
+                    EmployeeType = employee.EmployeeType,
+                    SallaryPerMonth = employee.SallaryPerMonth
+                };
                 _employeeRepo.AddAsync(newEmployee);
-                _context.Add(employee);
-                await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
             return View(employee); // if not valid, return to Create page to correct your mistakes
@@ -79,11 +83,22 @@ namespace PetShop.MVC.Controllers
             }
 
             var employee = await _employeeRepo.GetByIdAsync(id.Value);
+    
             if (employee == null)
             {
                 return NotFound();
             }
-            return View(employee);
+
+            var emp = new EmployeeEditViewModel()
+            {
+                ID = employee.ID,
+                Name = employee.Name,
+                Surname = employee.Surname,
+                EmployeeType = employee.EmployeeType,
+                SallaryPerMonth = employee.SallaryPerMonth,
+
+            };
+            return View(emp);
         }
 
         // POST: Employees/Edit/5
@@ -91,34 +106,27 @@ namespace PetShop.MVC.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Name,Surname,EmployeeType,SallaryPerMonth,ID")] Employee employee)
+        public async Task<IActionResult> Edit(int? id, [Bind("Name,Surname,EmployeeType,SallaryPerMonth")] EmployeeEditViewModel employee)
         {
-            if (id != employee.ID)
+            if (id == 0)
             {
                 return NotFound();
             }
 
             if (ModelState.IsValid)
             {
-                try
-                {
-                    var dbEmployee = await _employeeRepo.GetByIdAsync(employee.ID);
-                    if (dbEmployee is null)
-                        return BadRequest($"Can't find an empployee with id '{id}'");
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!EmployeeExists(employee.ID))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
+                var dbEmployee = await _employeeRepo.GetByIdAsync(id.Value);
+                if (dbEmployee is null)
+                    return BadRequest($"Can't find an empployee with id '{id}'");
+                dbEmployee.Name = employee.Name;
+                dbEmployee.Surname = employee.Surname;
+                dbEmployee.SallaryPerMonth = employee.SallaryPerMonth;
+                dbEmployee.EmployeeType = employee.EmployeeType;
+
+                await _employeeRepo.UpdateAsync(id.Value, dbEmployee);
                 return RedirectToAction(nameof(Index));
             }
+
             return View(employee);
         }
 
@@ -148,9 +156,9 @@ namespace PetShop.MVC.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EmployeeExists(int id)
-        {
-            return _context.Employees.Any(e => e.ID == id);
-        }
+        //private bool EmployeeExists(int id)
+        //{
+        //    return _context.Employees.Any(e => e.ID == id);
+        //}
     }
 }

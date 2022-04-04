@@ -13,11 +13,15 @@ namespace PetShop.EF.Repositories
     {
         private readonly PetShopContext context;
 
+
+        public EmployeeRepo(PetShopContext  _context) {
+            context = _context;
+        }
         public async Task AddAsync(Employee entity) {
-            await using var context = new PetShopContext();
+           
 
             AddLogic(entity, context);
-            context.SaveChangesAsync(); 
+            await  context.SaveChangesAsync(); 
         }
 
         //public async Task Create(Employee entity)
@@ -35,30 +39,30 @@ namespace PetShop.EF.Repositories
         //}
 
         public async Task DeleteAsync(int id) {
-            await using var context = new PetShopContext();
             DeleteLogic(context, id);
-            context.SaveChangesAsync(); 
+           await  context.SaveChangesAsync(); 
         }
 
-        public List<Employee> GetAll()
+        public  List<Employee> GetAll()
         {
-            using var context = new PetShopContext();
+   
             return context.Employees.ToList();
         }
 
         public async Task<IEnumerable<Employee>> GetAllAsync() {
-            await using var context = new PetShopContext();
+ 
             return await context.Employees.ToListAsync();
         }
 
         public Employee? GetById(int id)
         {
+            
             using var context = new PetShopContext();
             return context.Employees.Where(employee => employee.ID == id).SingleOrDefault();
         }
 
         public async Task<Employee?> GetByIdAsync(int id) {
-            await using var context = new PetShopContext();
+
             return await context.Employees.Where(employee => employee.ID == id).SingleOrDefaultAsync();
         }
 
@@ -70,7 +74,6 @@ namespace PetShop.EF.Repositories
         //}
 
         public async Task UpdateAsync(int id, Employee entity) {
-            await using var context = new PetShopContext();
             UpdateLogic(entity, context, id);
             await context.SaveChangesAsync(); ;
         }

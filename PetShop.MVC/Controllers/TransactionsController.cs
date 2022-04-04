@@ -87,17 +87,21 @@ namespace PetShop.MVC.Controllers
                     TotalPrice = sellModel.TotalPrice
                 };
 
-                var customer = await _customerRepo.GetByIdAsync(sellModel.CustomerID);
-                dbtrans.Customer = customer as Customer;
+                //var customer = await _customerRepo.GetByIdAsync(sellModel.CustomerID);
+                //dbtrans.Customer = new Customer();
+                //dbtrans.Customer.Name = customer.Name;
+                //dbtrans.Customer.Surname = customer.Surname;
+                //dbtrans.Customer.Phone = customer.Phone;
+                //dbtrans.Customer.TIN = customer.TIN;
 
-                var employee = await _employeeRepo.GetByIdAsync(sellModel.EmployeeID);
-                dbtrans.Employee = employee as Employee;
+                //var employee = await _employeeRepo.GetByIdAsync(sellModel.EmployeeID);
+                //dbtrans.Employee = employee as Employee;
 
-                var pet = await _petRepo.GetByIdAsync(sellModel.PetID);
-                dbtrans.Pet = pet as Pet;
+                //var pet = await _petRepo.GetByIdAsync(sellModel.PetID);
+                //dbtrans.Pet = pet as Pet;
 
-                var petFood = await _petFoodRepo.GetByIdAsync(sellModel.PetFoodID);
-                dbtrans.PetFood = petFood as PetFood;
+                //var petFood = await _petFoodRepo.GetByIdAsync(sellModel.PetFoodID);
+                //dbtrans.PetFood = petFood as PetFood;
 
                 await _transactionRepo.AddAsync(dbtrans);
                 return RedirectToAction("Index");
@@ -159,8 +163,32 @@ namespace PetShop.MVC.Controllers
             // GET: Transactions
             public async Task<IActionResult> Index()
         {
+            var dbtrans = await _transactionRepo.GetAllAsync();
+
+            var model = new TransactionIndexViewModel();
+
+            foreach (var item in dbtrans) {
+
+                model.Transactions.Add(item);
+            }
+            foreach (var item in model.Transactions) {
+                var customer = await _customerRepo.GetByIdAsync(item.CustomerID);
+                item.Customer.Name = customer.Name;
+                item.Customer.Surname = customer.Surname;
+                item.Customer.TIN = customer.TIN;
+                item.Customer.Phone = customer.Phone;
+
+                var emp = await _employeeRepo.GetByIdAsync(item.EmployeeID);
+                item.Employee.Name = emp.Name;
+                item.Employee.Surname = emp.Surname;
+                item.Employee.EmployeeType = emp.EmployeeType;
+                item.Employee.SallaryPerMonth = emp.SallaryPerMonth;
+
+
+            }
+
             //var petShopContext = _context.Transactions.Include(t => t.Customer).Include(t => t.Employee).Include(t => t.Pet).Include(t => t.PetFood);
-            return View(await _transactionRepo.GetAllAsync());
+            return View(model);
         }
 
         // GET: Transactions/Details/5

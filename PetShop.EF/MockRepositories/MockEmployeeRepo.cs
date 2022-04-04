@@ -12,8 +12,8 @@ namespace PetShop.EF.MockRepositories
     {
         private List<Employee> _employees = new List<Employee>
         {
-            new Employee(){ID = 1, Name ="Takis",Surname="Manageridis",EmployeeType=EmployeeType.Manager, SallaryPerMonth=2000},
-            new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60},
+            new Employee(){ID = 1, Name ="Takis",Surname="Manageridis",EmployeeType=EmployeeType.Manager, SallaryPerMonth=2000m},
+            new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60m},
             //new Employee(){ID = 2, Name ="Akis",Surname="Staffikis",EmployeeType=EmployeeType.Staff, SallaryPerMonth=450.60m},
 
         };
@@ -69,7 +69,7 @@ namespace PetShop.EF.MockRepositories
                 throw new ArgumentException("Given entity should not have ID set", nameof(entity));
             }
             var lastId = _employees.OrderBy(employee => employee.ID).Last().ID;
-            entity.ID = lastId;
+            entity.ID = ++lastId;
             _employees.Add(entity);
         }
         private void UpdateLogic(int id, Employee entity) {

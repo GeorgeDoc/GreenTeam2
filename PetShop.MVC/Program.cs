@@ -30,21 +30,19 @@ builder.Services.AddControllersWithViews();
 
 //Dababase Setup
 builder.Services.AddDbContext<PetShopContext>();
-//builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
-//builder.Services.AddTransient<IEntityRepo<Pet>, PetRepo>();
-//builder.Services.AddTransient<IEntityRepo<PetFood>, PetFoodRepo>();
-//builder.Services.AddTransient<IEntityRepo<Employee>, EmployeeRepo>();
-//builder.Services.AddTransient<IEntityRepo<Transaction>, TransactionRepo>();
+builder.Services.AddTransient<IEntityRepo<Customer>, CustomerRepo>();
+builder.Services.AddTransient<IEntityRepo<Pet>, PetRepo>();
+builder.Services.AddTransient<IEntityRepo<PetFood>, PetFoodRepo>();
+builder.Services.AddTransient<IEntityRepo<Employee>, EmployeeRepo>();
+builder.Services.AddTransient<IEntityRepo<Transaction>, TransactionRepo>();
 
 
 //Mock Setup
-builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
-builder.Services.AddSingleton<IEntityRepo<Pet>, MockPetRepo>();
-builder.Services.AddSingleton<IEntityRepo<Employee>, MockEmployeeRepo>();
-builder.Services.AddSingleton<IEntityRepo<PetFood>, MockPetFoodRepo>();
-builder.Services.AddSingleton<IEntityRepo<Transaction>, MockTransactionRepo>();
-
-builder.Services.AddSingleton<IEntityRepo<Employee>, MockEmployeeRepo>();
+//builder.Services.AddSingleton<IEntityRepo<Customer>, MockCustomerRepo>();
+//builder.Services.AddSingleton<IEntityRepo<Pet>, MockPetRepo>();
+//builder.Services.AddSingleton<IEntityRepo<PetFood>, MockPetFoodRepo>();
+//builder.Services.AddSingleton<IEntityRepo<Transaction>, MockTransactionRepo>();
+//builder.Services.AddSingleton<IEntityRepo<Employee>, MockEmployeeRepo>();
 
 
 

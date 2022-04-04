@@ -16,7 +16,7 @@ namespace PetShop.EF.Configuration {
         builder.Property(employee => employee.ID).ValueGeneratedOnAdd();
         builder.Property(employee => employee.Name).HasMaxLength(maxLength: 100);
         builder.Property(employee => employee.Surname).HasMaxLength(maxLength: 100);
-        builder.Property(employee => employee.SallaryPerMonth).HasColumnType("double(10, 2)");
+        builder.Property(employee => employee.SallaryPerMonth).HasColumnType("decimal(10, 2)");
         //builder.Property(employee => employee.SallaryPerMonth).HasColumnType("decimal(10, 2)");
         }
 
