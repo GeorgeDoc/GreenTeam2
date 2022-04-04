@@ -184,6 +184,12 @@ namespace PetShop.MVC.Controllers
                 item.Employee.EmployeeType = emp.EmployeeType;
                 item.Employee.SallaryPerMonth = emp.SallaryPerMonth;
 
+                var pet = await _petRepo.GetByIdAsync(item.PetID.Value);
+                item.Pet.Breed = pet.Breed;
+                item.Pet.AnimalType = pet.AnimalType;
+                item.Pet.Price = pet.Price;
+                item.Pet.Cost = pet.Cost;
+
 
             }
 
