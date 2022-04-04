@@ -1,69 +1,57 @@
-﻿@model TransactionCreateViewModel
+﻿@model IEnumerable<PetShop.Model.Pet>
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Index";
 }
 
-<h1>Create</h1>
+<h1>Index</h1>
 
-<h4>Transaction</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Date" class="control-label"></label>
-                <input asp-for="Date" class="form-control" />
-                <span asp-validation-for="Date" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="CustomerID" class="control-label"></label>
-                <select asp-for="CustomerID" class ="form-control" asp-items="ViewBag.CustomerID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="EmployeeID" class="control-label"></label>
-                <select asp-for="EmployeeID" class ="form-control" asp-items="ViewBag.EmployeeID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PetID" class="control-label"></label>
-                <select asp-for="PetID" class ="form-control" asp-items="ViewBag.PetID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PetPrice" class="control-label"></label>
-                <input asp-for="PetPrice" class="form-control" />
-                <span asp-validation-for="PetPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PetFoodID" class="control-label"></label>
-                <select asp-for="PetFoodID" class ="form-control" asp-items="ViewBag.PetFoodID"></select>
-            </div>
-            <div class="form-group">
-                <label asp-for="PetFoodQty" class="control-label"></label>
-                <input asp-for="PetFoodQty" class="form-control" />
-                <span asp-validation-for="PetFoodQty" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="PetFoodPrice" class="control-label"></label>
-                <input asp-for="PetFoodPrice" class="form-control" />
-                <span asp-validation-for="PetFoodPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TotalPrice" class="control-label"></label>
-                <input asp-for="TotalPrice" class="form-control" />
-                <span asp-validation-for="TotalPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
-    </div>
-</div>
-
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.Breed)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PetStatus)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.AnimalType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cost)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Breed)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PetStatus)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AnimalType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Price)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cost)
+            </td>
+            <td>
+                <a asp-action="Sell" asp-route-id="@item.ID">Sell</a> |
+            </td>
+        </tr>
 }
+    </tbody>
+</table>

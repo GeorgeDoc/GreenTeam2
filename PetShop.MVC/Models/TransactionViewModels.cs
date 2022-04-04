@@ -1,10 +1,12 @@
-﻿using PetShop.Model;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using PetShop.Model;
 using System.ComponentModel.DataAnnotations;
 
 namespace PetShop.MVC.Models
 {
     public class TransactionCreateViewModel
     {
+ 
         [Required]
         public DateTime Date { get; set; }
         [Required]
@@ -83,5 +85,19 @@ namespace PetShop.MVC.Models
         public int PetFoodQty { get; set; }
         public decimal PetFoodPrice { get; set; }
         public decimal TotalPrice { get; set; }
+    }
+
+
+
+    public class TransactionSellViewModel {
+        public Pet Pet { get; set; }
+        public List<PetFood> PetFoods { get; set; }
+        public SelectList Customers { get; set; }
+        public decimal TotalPrice { get; set; }
+        public int PetFoodQty { get; set; }
+        public decimal PetFoodPrice { get; set; } 
+        public int PetFoodID { get; set; }
+        public SelectList PetFoodList { get; set; }
+
     }
 }
